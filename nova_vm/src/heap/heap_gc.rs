@@ -493,4 +493,26 @@ fn sweep(heap: &mut Heap, bits: &HeapBits) {
             reference.take();
         }
     });
+    compact(heap);
+}
+
+fn compact(heap: &mut Heap) {
+    let mut object_compactions = Vec::<(u32, u32)>::with_capacity(heap.objects.len() / 5);
+    let mut last_none_start_index: Option<u32> = None;
+    let mut none_count: u32 = 0;
+    for index in 0..(heap.objects.len() + 1) {
+        if let Some(None) = heap.objects.get(index) {
+            match last_none_start_index {
+                Some(_) => none_count += 1,
+                None => {
+                    last_none_start_index = Some(index as u32);
+                    none_count = 1;
+                }
+            }
+        } else if let Some(start_index) = last_none_start_index {
+            object_compactions.push((start_index, none_count));
+            last_none_start_index = None;
+            none_count = 0;
+        }
+    }
 }
