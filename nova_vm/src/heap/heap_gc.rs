@@ -227,7 +227,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         module_marks.sort();
         module_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.modules.get_mut(index) {
+            if let Some(mut marked) = bits.modules.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -240,7 +240,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         script_marks.sort();
         script_marks.iter().for_each(|&idx| {
             let index = idx.into_index();
-            if let Some(marked) = bits.scripts.get_mut(index) {
+            if let Some(mut marked) = bits.scripts.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -253,7 +253,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         realm_marks.sort();
         realm_marks.iter().for_each(|&idx| {
             let index = idx.into_index();
-            if let Some(marked) = bits.realms.get_mut(index) {
+            if let Some(mut marked) = bits.realms.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -268,7 +268,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         declarative_environment_marks.sort();
         declarative_environment_marks.iter().for_each(|&idx| {
             let index = idx.into_index();
-            if let Some(marked) = bits.declarative_environments.get_mut(index) {
+            if let Some(mut marked) = bits.declarative_environments.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -282,7 +282,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         function_environment_marks.sort();
         function_environment_marks.iter().for_each(|&idx| {
             let index = idx.into_index();
-            if let Some(marked) = bits.function_environments.get_mut(index) {
+            if let Some(mut marked) = bits.function_environments.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -296,7 +296,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         global_environment_marks.sort();
         global_environment_marks.iter().for_each(|&idx| {
             let index = idx.into_index();
-            if let Some(marked) = bits.global_environments.get_mut(index) {
+            if let Some(mut marked) = bits.global_environments.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -310,7 +310,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         module_environment_marks.sort();
         module_environment_marks.iter().for_each(|&idx| {
             let index = idx.into_index();
-            if let Some(marked) = bits.module_environments.get_mut(index) {
+            if let Some(mut marked) = bits.module_environments.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -324,7 +324,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         object_environment_marks.sort();
         object_environment_marks.iter().for_each(|&idx| {
             let index = idx.into_index();
-            if let Some(marked) = bits.object_environments.get_mut(index) {
+            if let Some(mut marked) = bits.object_environments.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -338,7 +338,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         array_marks.sort();
         array_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.arrays.get_mut(index) {
+            if let Some(mut marked) = bits.arrays.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -354,7 +354,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             array_buffer_marks.sort();
             array_buffer_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.array_buffers.get_mut(index) {
+                if let Some(mut marked) = bits.array_buffers.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -369,7 +369,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         array_iterator_marks.sort();
         array_iterator_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.array_iterators.get_mut(index) {
+            if let Some(mut marked) = bits.array_iterators.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -383,7 +383,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         async_generator_marks.sort();
         async_generator_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.async_generators.get_mut(index) {
+            if let Some(mut marked) = bits.async_generators.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -397,7 +397,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         await_reaction_marks.sort();
         await_reaction_marks.iter().for_each(|&idx| {
             let index = idx.into_index();
-            if let Some(marked) = bits.await_reactions.get_mut(index) {
+            if let Some(mut marked) = bits.await_reactions.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -410,7 +410,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         bigint_marks.sort();
         bigint_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.bigints.get_mut(index) {
+            if let Some(mut marked) = bits.bigints.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -424,7 +424,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         bound_function_marks.sort();
         bound_function_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.bound_functions.get_mut(index) {
+            if let Some(mut marked) = bits.bound_functions.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -438,7 +438,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         ecmascript_function_marks.sort();
         ecmascript_function_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.ecmascript_functions.get_mut(index) {
+            if let Some(mut marked) = bits.ecmascript_functions.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -451,7 +451,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         error_marks.sort();
         error_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.errors.get_mut(index) {
+            if let Some(mut marked) = bits.errors.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -464,7 +464,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         executable_marks.sort();
         executable_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.executables.get_mut(index) {
+            if let Some(mut marked) = bits.executables.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -477,7 +477,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         source_code_marks.sort();
         source_code_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.source_codes.get_mut(index) {
+            if let Some(mut marked) = bits.source_codes.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -491,7 +491,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         builtin_constructors_marks.sort();
         builtin_constructors_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.builtin_constructors.get_mut(index) {
+            if let Some(mut marked) = bits.builtin_constructors.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -505,7 +505,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         builtin_functions_marks.sort();
         builtin_functions_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.builtin_functions.get_mut(index) {
+            if let Some(mut marked) = bits.builtin_functions.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -518,7 +518,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         caches_marks.sort();
         caches_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.caches.get_mut(index) {
+            if let Some(mut marked) = bits.caches.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -533,7 +533,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             data_view_marks.sort();
             data_view_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.data_views.get_mut(index) {
+                if let Some(mut marked) = bits.data_views.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -549,7 +549,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             date_marks.sort();
             date_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.dates.get_mut(index) {
+                if let Some(mut marked) = bits.dates.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -564,7 +564,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         embedder_object_marks.sort();
         embedder_object_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.embedder_objects.get_mut(index) {
+            if let Some(mut marked) = bits.embedder_objects.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -578,7 +578,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         finalization_registry_marks.sort();
         finalization_registry_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.finalization_registrys.get_mut(index) {
+            if let Some(mut marked) = bits.finalization_registrys.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -591,7 +591,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         generator_marks.sort();
         generator_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.generators.get_mut(index) {
+            if let Some(mut marked) = bits.generators.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -604,7 +604,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         object_marks.sort();
         object_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.object_shapes.get_mut(index) {
+            if let Some(mut marked) = bits.object_shapes.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -618,7 +618,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         object_marks.sort();
         object_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.objects.get_mut(index) {
+            if let Some(mut marked) = bits.objects.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -633,7 +633,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         promise_marks.sort();
         promise_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.promises.get_mut(index) {
+            if let Some(mut marked) = bits.promises.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -647,7 +647,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         promise_reaction_record_marks.sort();
         promise_reaction_record_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.promise_reaction_records.get_mut(index) {
+            if let Some(mut marked) = bits.promise_reaction_records.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -661,7 +661,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         promise_resolving_function_marks.sort();
         promise_resolving_function_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.promise_resolving_functions.get_mut(index) {
+            if let Some(mut marked) = bits.promise_resolving_functions.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -677,7 +677,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         promise_finally_function_marks.sort();
         promise_finally_function_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.promise_finally_functions.get_mut(index) {
+            if let Some(mut marked) = bits.promise_finally_functions.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -692,7 +692,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         proxy_marks.sort();
         proxy_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.proxys.get_mut(index) {
+            if let Some(mut marked) = bits.proxys.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -705,7 +705,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         map_marks.sort();
         map_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.maps.get_mut(index) {
+            if let Some(mut marked) = bits.maps.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -718,7 +718,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         map_iterator_marks.sort();
         map_iterator_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.map_iterators.get_mut(index) {
+            if let Some(mut marked) = bits.map_iterators.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -732,7 +732,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         module_request_record_marks.sort();
         module_request_record_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.module_request_records.get_mut(index) {
+            if let Some(mut marked) = bits.module_request_records.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -745,7 +745,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         number_marks.sort();
         number_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.numbers.get_mut(index) {
+            if let Some(mut marked) = bits.numbers.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -759,7 +759,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         primitive_object_marks.sort();
         primitive_object_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.primitive_objects.get_mut(index) {
+            if let Some(mut marked) = bits.primitive_objects.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -774,7 +774,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             regexp_marks.sort();
             regexp_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.regexps.get_mut(index) {
+                if let Some(mut marked) = bits.regexps.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -791,7 +791,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             regexp_string_iterator_marks.sort();
             regexp_string_iterator_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.regexp_string_iterators.get_mut(index) {
+                if let Some(mut marked) = bits.regexp_string_iterators.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -807,7 +807,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             set_marks.sort();
             set_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.sets.get_mut(index) {
+                if let Some(mut marked) = bits.sets.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -822,7 +822,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             set_iterator_marks.sort();
             set_iterator_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.set_iterators.get_mut(index) {
+                if let Some(mut marked) = bits.set_iterators.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -839,7 +839,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             shared_array_buffer_marks.sort();
             shared_array_buffer_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.shared_array_buffers.get_mut(index) {
+                if let Some(mut marked) = bits.shared_array_buffers.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -854,7 +854,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         source_text_module_record_marks.sort();
         source_text_module_record_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.source_text_module_records.get_mut(index) {
+            if let Some(mut marked) = bits.source_text_module_records.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -870,7 +870,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         string_generator_marks.sort();
         string_generator_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.string_iterators.get_mut(index) {
+            if let Some(mut marked) = bits.string_iterators.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -883,7 +883,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         string_marks.sort();
         string_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.strings.get_mut(index) {
+            if let Some(mut marked) = bits.strings.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -896,7 +896,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
         symbol_marks.sort();
         symbol_marks.iter().for_each(|&idx| {
             let index = idx.get_index();
-            if let Some(marked) = bits.symbols.get_mut(index) {
+            if let Some(mut marked) = bits.symbols.get_mut(index) {
                 if *marked {
                     // Already marked, ignore
                     return;
@@ -912,7 +912,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             typed_arrays_marks.sort();
             typed_arrays_marks.iter().for_each(|&idx| {
                 let index = idx.into_index();
-                if let Some(marked) = bits.typed_arrays.get_mut(index) {
+                if let Some(mut marked) = bits.typed_arrays.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -928,7 +928,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             weak_map_marks.sort();
             weak_map_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.weak_maps.get_mut(index) {
+                if let Some(mut marked) = bits.weak_maps.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -941,7 +941,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             weak_ref_marks.sort();
             weak_ref_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.weak_refs.get_mut(index) {
+                if let Some(mut marked) = bits.weak_refs.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;
@@ -954,7 +954,7 @@ pub fn heap_gc(agent: &mut Agent, root_realms: &mut [Option<Realm<'static>>], gc
             weak_set_marks.sort();
             weak_set_marks.iter().for_each(|&idx| {
                 let index = idx.get_index();
-                if let Some(marked) = bits.weak_sets.get_mut(index) {
+                if let Some(mut marked) = bits.weak_sets.get_mut(index) {
                     if *marked {
                         // Already marked, ignore
                         return;

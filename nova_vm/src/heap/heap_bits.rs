@@ -3,6 +3,7 @@ use core::{hash::Hash, num::NonZeroU32};
 use ahash::AHashMap;
 #[cfg(feature = "weak-refs")]
 use ahash::AHashSet;
+use bitvec::prelude::*;
 use hashbrown::HashTable;
 use soavec::{SoAVec, SoAble};
 
@@ -79,21 +80,21 @@ use crate::engine::Executable;
 #[derive(Debug)]
 pub struct HeapBits {
     #[cfg(feature = "array-buffer")]
-    pub array_buffers: Box<[bool]>,
-    pub arrays: Box<[bool]>,
-    pub array_iterators: Box<[bool]>,
-    pub async_generators: Box<[bool]>,
-    pub await_reactions: Box<[bool]>,
-    pub bigints: Box<[bool]>,
-    pub bound_functions: Box<[bool]>,
-    pub builtin_constructors: Box<[bool]>,
-    pub builtin_functions: Box<[bool]>,
-    pub caches: Box<[bool]>,
+    pub array_buffers: BitBox,
+    pub arrays: BitBox,
+    pub array_iterators: BitBox,
+    pub async_generators: BitBox,
+    pub await_reactions: BitBox,
+    pub bigints: BitBox,
+    pub bound_functions: BitBox,
+    pub builtin_constructors: BitBox,
+    pub builtin_functions: BitBox,
+    pub caches: BitBox,
     #[cfg(feature = "array-buffer")]
-    pub data_views: Box<[bool]>,
+    pub data_views: BitBox,
     #[cfg(feature = "date")]
-    pub dates: Box<[bool]>,
-    pub declarative_environments: Box<[bool]>,
+    pub dates: BitBox,
+    pub declarative_environments: BitBox,
     pub e_2_1: Box<[(bool, u8)]>,
     pub e_2_2: Box<[(bool, u8)]>,
     pub e_2_3: Box<[(bool, u8)]>,
@@ -116,55 +117,55 @@ pub struct HeapBits {
     pub k_2_16: Box<[(bool, u16)]>,
     pub k_2_24: Box<[(bool, u32)]>,
     pub k_2_32: Box<[(bool, u32)]>,
-    pub ecmascript_functions: Box<[bool]>,
-    pub embedder_objects: Box<[bool]>,
-    pub errors: Box<[bool]>,
-    pub executables: Box<[bool]>,
-    pub source_codes: Box<[bool]>,
-    pub finalization_registrys: Box<[bool]>,
-    pub function_environments: Box<[bool]>,
-    pub generators: Box<[bool]>,
-    pub global_environments: Box<[bool]>,
-    pub maps: Box<[bool]>,
-    pub map_iterators: Box<[bool]>,
-    pub module_environments: Box<[bool]>,
-    pub modules: Box<[bool]>,
-    pub module_request_records: Box<[bool]>,
-    pub numbers: Box<[bool]>,
-    pub object_environments: Box<[bool]>,
-    pub object_shapes: Box<[bool]>,
-    pub objects: Box<[bool]>,
-    pub primitive_objects: Box<[bool]>,
-    pub private_environments: Box<[bool]>,
-    pub promise_reaction_records: Box<[bool]>,
-    pub promise_resolving_functions: Box<[bool]>,
-    pub promise_finally_functions: Box<[bool]>,
-    pub promises: Box<[bool]>,
-    pub proxys: Box<[bool]>,
-    pub realms: Box<[bool]>,
+    pub ecmascript_functions: BitBox,
+    pub embedder_objects: BitBox,
+    pub errors: BitBox,
+    pub executables: BitBox,
+    pub source_codes: BitBox,
+    pub finalization_registrys: BitBox,
+    pub function_environments: BitBox,
+    pub generators: BitBox,
+    pub global_environments: BitBox,
+    pub maps: BitBox,
+    pub map_iterators: BitBox,
+    pub module_environments: BitBox,
+    pub modules: BitBox,
+    pub module_request_records: BitBox,
+    pub numbers: BitBox,
+    pub object_environments: BitBox,
+    pub object_shapes: BitBox,
+    pub objects: BitBox,
+    pub primitive_objects: BitBox,
+    pub private_environments: BitBox,
+    pub promise_reaction_records: BitBox,
+    pub promise_resolving_functions: BitBox,
+    pub promise_finally_functions: BitBox,
+    pub promises: BitBox,
+    pub proxys: BitBox,
+    pub realms: BitBox,
     #[cfg(feature = "regexp")]
-    pub regexps: Box<[bool]>,
+    pub regexps: BitBox,
     #[cfg(feature = "regexp")]
-    pub regexp_string_iterators: Box<[bool]>,
-    pub scripts: Box<[bool]>,
+    pub regexp_string_iterators: BitBox,
+    pub scripts: BitBox,
     #[cfg(feature = "set")]
-    pub sets: Box<[bool]>,
+    pub sets: BitBox,
     #[cfg(feature = "set")]
-    pub set_iterators: Box<[bool]>,
+    pub set_iterators: BitBox,
     #[cfg(feature = "shared-array-buffer")]
-    pub shared_array_buffers: Box<[bool]>,
-    pub source_text_module_records: Box<[bool]>,
-    pub string_iterators: Box<[bool]>,
-    pub strings: Box<[bool]>,
-    pub symbols: Box<[bool]>,
+    pub shared_array_buffers: BitBox,
+    pub source_text_module_records: BitBox,
+    pub string_iterators: BitBox,
+    pub strings: BitBox,
+    pub symbols: BitBox,
     #[cfg(feature = "array-buffer")]
-    pub typed_arrays: Box<[bool]>,
+    pub typed_arrays: BitBox,
     #[cfg(feature = "weak-refs")]
-    pub weak_maps: Box<[bool]>,
+    pub weak_maps: BitBox,
     #[cfg(feature = "weak-refs")]
-    pub weak_refs: Box<[bool]>,
+    pub weak_refs: BitBox,
     #[cfg(feature = "weak-refs")]
-    pub weak_sets: Box<[bool]>,
+    pub weak_sets: BitBox,
 }
 
 #[derive(Debug)]
@@ -260,22 +261,6 @@ pub(crate) struct WorkQueues {
 
 impl HeapBits {
     pub fn new(heap: &Heap) -> Self {
-        #[cfg(feature = "array-buffer")]
-        let array_buffers = vec![false; heap.array_buffers.len()];
-        let arrays = vec![false; heap.arrays.len() as usize];
-        let array_iterators = vec![false; heap.array_iterators.len()];
-        let async_generators = vec![false; heap.async_generators.len()];
-        let await_reactions = vec![false; heap.await_reactions.len()];
-        let bigints = vec![false; heap.bigints.len()];
-        let bound_functions = vec![false; heap.bound_functions.len()];
-        let builtin_constructors = vec![false; heap.builtin_constructors.len()];
-        let builtin_functions = vec![false; heap.builtin_functions.len()];
-        let caches = vec![false; heap.caches.len()];
-        #[cfg(feature = "array-buffer")]
-        let data_views = vec![false; heap.data_views.len()];
-        #[cfg(feature = "date")]
-        let dates = vec![false; heap.dates.len()];
-        let declarative_environments = vec![false; heap.environments.declarative.len()];
         let e_2_1 = vec![(false, 0u8); heap.elements.e2pow1.values.len()];
         let e_2_2 = vec![(false, 0u8); heap.elements.e2pow2.values.len()];
         let e_2_3 = vec![(false, 0u8); heap.elements.e2pow3.values.len()];
@@ -298,72 +283,24 @@ impl HeapBits {
         let k_2_16 = vec![(false, 0u16); heap.elements.k2pow16.keys.len()];
         let k_2_24 = vec![(false, 0u32); heap.elements.k2pow24.keys.len()];
         let k_2_32 = vec![(false, 0u32); heap.elements.k2pow32.keys.len()];
-        let ecmascript_functions = vec![false; heap.ecmascript_functions.len()];
-        let embedder_objects = vec![false; heap.embedder_objects.len()];
-        let errors = vec![false; heap.errors.len()];
-        let executables = vec![false; heap.executables.len()];
-        let source_codes = vec![false; heap.source_codes.len()];
-        let finalization_registrys = vec![false; heap.finalization_registrys.len()];
-        let function_environments = vec![false; heap.environments.function.len()];
-        let generators = vec![false; heap.generators.len()];
-        let global_environments = vec![false; heap.environments.global.len()];
-        let maps = vec![false; heap.maps.len()];
-        let map_iterators = vec![false; heap.map_iterators.len()];
-        let module_environments = vec![false; heap.environments.module.len()];
-        let modules = vec![false; heap.modules.len()];
-        let module_request_records = vec![false; heap.module_request_records.len()];
-        let numbers = vec![false; heap.numbers.len()];
-        let object_environments = vec![false; heap.environments.object.len()];
-        let object_shapes = vec![false; heap.object_shapes.len()];
-        let objects = vec![false; heap.objects.len()];
-        let primitive_objects = vec![false; heap.primitive_objects.len()];
-        let promise_reaction_records = vec![false; heap.promise_reaction_records.len()];
-        let promise_resolving_functions = vec![false; heap.promise_resolving_functions.len()];
-        let promise_finally_functions = vec![false; heap.promise_finally_functions.len()];
-        let private_environments = vec![false; heap.environments.private.len()];
-        let promises = vec![false; heap.promises.len()];
-        let proxys = vec![false; heap.proxys.len()];
-        let realms = vec![false; heap.realms.len()];
-        #[cfg(feature = "regexp")]
-        let regexps = vec![false; heap.regexps.len()];
-        #[cfg(feature = "regexp")]
-        let regexp_string_iterators = vec![false; heap.regexp_string_iterators.len()];
-        let scripts = vec![false; heap.scripts.len()];
-        #[cfg(feature = "set")]
-        let sets = vec![false; heap.sets.len()];
-        #[cfg(feature = "set")]
-        let set_iterators = vec![false; heap.set_iterators.len()];
-        #[cfg(feature = "shared-array-buffer")]
-        let shared_array_buffers = vec![false; heap.shared_array_buffers.len()];
-        let source_text_module_records = vec![false; heap.source_text_module_records.len()];
-        let string_iterators = vec![false; heap.string_iterators.len()];
-        let strings = vec![false; heap.strings.len()];
-        let symbols = vec![false; heap.symbols.len()];
-        #[cfg(feature = "array-buffer")]
-        let typed_arrays = vec![false; heap.typed_arrays.len()];
-        #[cfg(feature = "weak-refs")]
-        let weak_maps = vec![false; heap.weak_maps.len()];
-        #[cfg(feature = "weak-refs")]
-        let weak_refs = vec![false; heap.weak_refs.len()];
-        #[cfg(feature = "weak-refs")]
-        let weak_sets = vec![false; heap.weak_sets.len()];
+
         Self {
             #[cfg(feature = "array-buffer")]
-            array_buffers: array_buffers.into_boxed_slice(),
-            arrays: arrays.into_boxed_slice(),
-            array_iterators: array_iterators.into_boxed_slice(),
-            async_generators: async_generators.into_boxed_slice(),
-            await_reactions: await_reactions.into_boxed_slice(),
-            bigints: bigints.into_boxed_slice(),
-            bound_functions: bound_functions.into_boxed_slice(),
-            builtin_constructors: builtin_constructors.into_boxed_slice(),
-            builtin_functions: builtin_functions.into_boxed_slice(),
-            caches: caches.into_boxed_slice(),
+            array_buffers: bitbox![0; heap.array_buffers.len()],
+            arrays: bitbox![0; heap.arrays.len() as usize],
+            array_iterators: bitbox![0; heap.array_iterators.len()],
+            async_generators: bitbox![0; heap.async_generators.len()],
+            await_reactions: bitbox![0; heap.await_reactions.len()],
+            bigints: bitbox![0; heap.bigints.len()],
+            bound_functions: bitbox![0; heap.bound_functions.len()],
+            builtin_constructors: bitbox![0; heap.builtin_constructors.len()],
+            builtin_functions: bitbox![0; heap.builtin_functions.len()],
+            caches: bitbox![0; heap.caches.len()],
             #[cfg(feature = "array-buffer")]
-            data_views: data_views.into_boxed_slice(),
+            data_views: bitbox![0; heap.data_views.len()],
             #[cfg(feature = "date")]
-            dates: dates.into_boxed_slice(),
-            declarative_environments: declarative_environments.into_boxed_slice(),
+            dates: bitbox![0; heap.dates.len()],
+            declarative_environments: bitbox![0; heap.environments.declarative.len()],
             e_2_1: e_2_1.into_boxed_slice(),
             e_2_2: e_2_2.into_boxed_slice(),
             e_2_3: e_2_3.into_boxed_slice(),
@@ -386,55 +323,55 @@ impl HeapBits {
             k_2_16: k_2_16.into_boxed_slice(),
             k_2_24: k_2_24.into_boxed_slice(),
             k_2_32: k_2_32.into_boxed_slice(),
-            ecmascript_functions: ecmascript_functions.into_boxed_slice(),
-            embedder_objects: embedder_objects.into_boxed_slice(),
-            errors: errors.into_boxed_slice(),
-            executables: executables.into_boxed_slice(),
-            source_codes: source_codes.into_boxed_slice(),
-            finalization_registrys: finalization_registrys.into_boxed_slice(),
-            function_environments: function_environments.into_boxed_slice(),
-            generators: generators.into_boxed_slice(),
-            global_environments: global_environments.into_boxed_slice(),
-            maps: maps.into_boxed_slice(),
-            map_iterators: map_iterators.into_boxed_slice(),
-            module_environments: module_environments.into_boxed_slice(),
-            modules: modules.into_boxed_slice(),
-            module_request_records: module_request_records.into_boxed_slice(),
-            numbers: numbers.into_boxed_slice(),
-            object_environments: object_environments.into_boxed_slice(),
-            object_shapes: object_shapes.into_boxed_slice(),
-            objects: objects.into_boxed_slice(),
-            primitive_objects: primitive_objects.into_boxed_slice(),
-            promise_reaction_records: promise_reaction_records.into_boxed_slice(),
-            promise_resolving_functions: promise_resolving_functions.into_boxed_slice(),
-            promise_finally_functions: promise_finally_functions.into_boxed_slice(),
-            private_environments: private_environments.into_boxed_slice(),
-            promises: promises.into_boxed_slice(),
-            proxys: proxys.into_boxed_slice(),
-            realms: realms.into_boxed_slice(),
+            ecmascript_functions: bitbox![0; heap.ecmascript_functions.len()],
+            embedder_objects: bitbox![0; heap.embedder_objects.len()],
+            errors: bitbox![0; heap.errors.len()],
+            executables: bitbox![0; heap.executables.len()],
+            source_codes: bitbox![0; heap.source_codes.len()],
+            finalization_registrys: bitbox![0; heap.finalization_registrys.len()],
+            function_environments: bitbox![0; heap.environments.function.len()],
+            generators: bitbox![0; heap.generators.len()],
+            global_environments: bitbox![0; heap.environments.global.len()],
+            maps: bitbox![0; heap.maps.len()],
+            map_iterators: bitbox![0; heap.map_iterators.len()],
+            module_environments: bitbox![0; heap.environments.module.len()],
+            modules: bitbox![0; heap.modules.len()],
+            module_request_records: bitbox![0; heap.module_request_records.len()],
+            numbers: bitbox![0; heap.numbers.len()],
+            object_environments: bitbox![0; heap.environments.object.len()],
+            object_shapes: bitbox![0; heap.object_shapes.len()],
+            objects: bitbox![0; heap.objects.len()],
+            primitive_objects: bitbox![0; heap.primitive_objects.len()],
+            promise_reaction_records: bitbox![0; heap.promise_reaction_records.len()],
+            promise_resolving_functions: bitbox![0; heap.promise_resolving_functions.len()],
+            promise_finally_functions: bitbox![0; heap.promise_finally_functions.len()],
+            private_environments: bitbox![0; heap.environments.private.len()],
+            promises: bitbox![0; heap.promises.len()],
+            proxys: bitbox![0; heap.proxys.len()],
+            realms: bitbox![0; heap.realms.len()],
             #[cfg(feature = "regexp")]
-            regexps: regexps.into_boxed_slice(),
+            regexps: bitbox![0; heap.regexps.len()],
             #[cfg(feature = "regexp")]
-            regexp_string_iterators: regexp_string_iterators.into_boxed_slice(),
-            scripts: scripts.into_boxed_slice(),
+            regexp_string_iterators: bitbox![0; heap.regexp_string_iterators.len()],
+            scripts: bitbox![0; heap.scripts.len()],
             #[cfg(feature = "set")]
-            sets: sets.into_boxed_slice(),
+            sets: bitbox![0; heap.sets.len()],
             #[cfg(feature = "set")]
-            set_iterators: set_iterators.into_boxed_slice(),
+            set_iterators: bitbox![0; heap.set_iterators.len()],
             #[cfg(feature = "shared-array-buffer")]
-            shared_array_buffers: shared_array_buffers.into_boxed_slice(),
-            source_text_module_records: source_text_module_records.into_boxed_slice(),
-            string_iterators: string_iterators.into_boxed_slice(),
-            strings: strings.into_boxed_slice(),
-            symbols: symbols.into_boxed_slice(),
+            shared_array_buffers: bitbox![0; heap.shared_array_buffers.len()],
+            source_text_module_records: bitbox![0; heap.source_text_module_records.len()],
+            string_iterators: bitbox![0; heap.string_iterators.len()],
+            strings: bitbox![0; heap.strings.len()],
+            symbols: bitbox![0; heap.symbols.len()],
             #[cfg(feature = "array-buffer")]
-            typed_arrays: typed_arrays.into_boxed_slice(),
+            typed_arrays: bitbox![0; heap.typed_arrays.len()],
             #[cfg(feature = "weak-refs")]
-            weak_maps: weak_maps.into_boxed_slice(),
+            weak_maps: bitbox![0; heap.weak_maps.len()],
             #[cfg(feature = "weak-refs")]
-            weak_refs: weak_refs.into_boxed_slice(),
+            weak_refs: bitbox![0; heap.weak_refs.len()],
             #[cfg(feature = "weak-refs")]
-            weak_sets: weak_sets.into_boxed_slice(),
+            weak_sets: bitbox![0; heap.weak_sets.len()],
         }
     }
 }
@@ -872,7 +809,7 @@ impl CompactionList {
         }
     }
 
-    pub(crate) fn from_mark_bits(marks: &[bool]) -> Self {
+    pub(crate) fn from_mark_bits(marks: &BitSlice) -> Self {
         let mut builder = CompactionListBuilder::with_bits_length(marks.len());
         marks.iter().for_each(|bit| {
             if *bit {
@@ -1665,13 +1602,13 @@ fn sweep_array_with_u32_length<T: HeapMarkAndSweep, const N: usize>(
 pub(crate) fn sweep_heap_vector_values<T: HeapMarkAndSweep>(
     vec: &mut Vec<T>,
     compactions: &CompactionLists,
-    bits: &[bool],
+    bits: &BitSlice,
 ) {
     assert_eq!(vec.len(), bits.len());
     let mut iter = bits.iter();
     vec.retain_mut(|item| {
-        let do_retain = iter.next().unwrap();
-        if *do_retain {
+        let do_retain = iter.next();
+        if let Some(true) = do_retain.as_deref() {
             item.sweep_values(compactions);
             true
         } else {
@@ -1683,7 +1620,7 @@ pub(crate) fn sweep_heap_vector_values<T: HeapMarkAndSweep>(
 pub(crate) fn sweep_heap_soa_vector_values<T: SoAble + HeapMarkAndSweep>(
     vec: &mut SoAVec<T>,
     compactions: &CompactionLists,
-    bits: &[bool],
+    bits: &BitSlice,
 ) where
     for<'a> T::Mut<'a>: HeapMarkAndSweep,
 {

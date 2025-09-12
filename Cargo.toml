@@ -16,6 +16,7 @@ authors = ["The Nova Team"]
 
 [workspace.dependencies]
 ahash = "0.8.12"
+bitvec = "1.0.1"
 clap = { version = "4.5.47", features = ["derive"] }
 cliclack = "0.3.6"
 console = "0.15.11"

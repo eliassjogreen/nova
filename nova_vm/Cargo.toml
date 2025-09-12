@@ -13,6 +13,7 @@ categories.workspace = true
 
 [dependencies]
 ahash = { workspace = true }
+bitvec = { workspace = true }
 fast-float = { workspace = true }
 hashbrown = { workspace = true }
 lexical = { workspace = true }

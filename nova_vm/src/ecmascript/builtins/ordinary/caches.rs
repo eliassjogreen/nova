@@ -4,6 +4,7 @@
 
 use std::{marker::PhantomData, num::NonZeroU32};
 
+use bitvec::slice::BitSlice;
 use hashbrown::{HashTable, hash_table::Entry};
 
 use crate::{
@@ -428,7 +429,7 @@ impl Caches<'static> {
         self.property_lookup_cache_prototypes[index].mark_values(queues);
     }
 
-    pub(crate) fn sweep_cache(&mut self, compactions: &CompactionLists, bits: &[bool]) {
+    pub(crate) fn sweep_cache(&mut self, compactions: &CompactionLists, bits: &BitSlice) {
         sweep_heap_vector_values(&mut self.property_lookup_caches, compactions, bits);
         sweep_heap_vector_values(
             &mut self.property_lookup_cache_prototypes,
